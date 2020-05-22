@@ -36,7 +36,13 @@ spec:
           - name: grafana-data
             mountPath: /data/grafana
           - name: grafana-datasource
-            mountPath: /etc/grafana/provisioning/datasources
+            mountPath: /etc/grafana/provisioning/datasources/datasource.yaml
+            subPath: datasource.yaml
+          - name: grafana-dashboard-provider
+            mountPath: /etc/grafana/provisioning/dashboards/dashboard-provider.yaml
+            subPath: dashboard-provider.yaml
+          - name: grafana-dashboard
+            mountPath: /var/lib/grafana/dashboards
       securityContext:
         runAsUser: 0
         fsGroup: 472      
@@ -46,4 +52,16 @@ spec:
           claimName: grafana-data
       - name: grafana-datasource
         configMap:
-          name: grafana-datasource
+          name: grafana-config
+          items:
+            - key: datasource.yaml
+              path: datasource.yaml
+      - name: grafana-dashboard-provider
+        configMap:
+          name: grafana-config
+          items:
+            - key: dashboard-provider.yaml
+              path: dashboard-provider.yaml
+      - name: grafana-dashboard
+        configMap:
+          name: grafana-dashboard
